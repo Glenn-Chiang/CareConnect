@@ -24,7 +24,9 @@ export function Layout({ children }: LayoutProps) {
             <div>
               <h1 className="font-semibold">CareConnect</h1>
               <p className="text-sm text-gray-500">
-                {currentUser?.name} • {currentUser?.role}
+                {currentUser?.name} •{" "}
+                {String(currentUser?.role).charAt(0).toUpperCase() +
+                  String(currentUser?.role).slice(1)}
               </p>
             </div>
             <div className="flex gap-2">
