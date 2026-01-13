@@ -197,7 +197,7 @@ export function TodoList() {
                         onCheckedChange={() => handleToggleTodo(todo.id)}
                         className="mt-1"
                       />
-                      <div className="flex-1">
+                      <div id={String(todo.id)} className="flex-1">
                         <div className="flex items-start justify-between gap-2">
                           <div>
                             <p className="text-sm">{todo.title}</p>
@@ -236,7 +236,7 @@ export function TodoList() {
                           onCheckedChange={() => handleToggleTodo(todo.id)}
                           className="mt-1"
                         />
-                        <div className="flex-1">
+                        <div id={String(todo.id)} className="flex-1">
                           <p className="text-sm line-through">{todo.title}</p>
                           <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
                             <span>{recipient?.name}</span>
