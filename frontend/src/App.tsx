@@ -6,7 +6,6 @@ import {
   createRoute,
   Outlet,
   useNavigate,
-  redirect,
 } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { Layout } from "./components/Layout";

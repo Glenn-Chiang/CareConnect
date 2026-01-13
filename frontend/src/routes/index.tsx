@@ -224,7 +224,8 @@ export function Dashboard() {
             {recipients?.map((recipient) => (
               <Link
                 key={recipient.id}
-                to={`/recipients/${recipient.id}`}
+                to="/recipients/$recipientId"
+                params={{ recipientId: String(recipient.id) }}
                 className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
               >
                 <div className="flex items-center gap-3">
