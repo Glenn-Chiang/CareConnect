@@ -281,7 +281,7 @@ export function Signup() {
 
               <div className="text-center">
                 <Link to="/login">
-                  <Button variant="link">
+                <Button variant="link" className="whitespace-normal">
                     Already have an account? Login here
                   </Button>
                 </Link>
