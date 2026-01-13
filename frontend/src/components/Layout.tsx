@@ -23,7 +23,7 @@ export function Layout({ children }: LayoutProps) {
           <div className="flex justify-between items-center py-4">
             <div>
               <h1 className="font-semibold">CareConnect</h1>
-              <p className="text-sm text-gray-500">{currentUser?.name} • {currentUser?.role}</p>
+              <p className="text-sm text-gray-500">{currentUser?.name} • {String(currentUser?.role).charAt(0).toUpperCase() + String(currentUser?.role).slice(1)}</p>
             </div>
             <Button variant="ghost" onClick={logout}>
               <LogOut className="w-4 h-4 mr-2" />
