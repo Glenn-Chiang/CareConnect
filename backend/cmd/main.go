@@ -34,6 +34,14 @@ func main() {
 	r.PUT("/journal-entries/:id", journalHandler.Update)
 	r.DELETE("/journal-entries/:id", journalHandler.Delete)
 
+	
+	h := handlers.CommentHandler{DB: DB}
+	r.POST("/comments", h.Create)
+	r.GET("/comments", h.List)
+	r.GET("/comments/:id", h.GetByID)
+	r.PUT("/comments/:id", h.Update)
+	r.DELETE("/comments/:id", h.Delete)
+
 	if err := r.Run(":8080"); err != nil {
 		log.Fatalf("server failed: %v", err)
 	}
