@@ -15,24 +15,39 @@ export function Layout({ children }: LayoutProps) {
 
   const isActive = (path: string) => currentPath === path;
 
+  const initials =
+    currentUser?.name
+      ?.split(" ")
+      .filter(Boolean)
+      .map((n) => n[0])
+      .join("") || "";
+
+  const firstName = currentUser?.name?.split(" ").filter(Boolean)[0] || "";
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div>
-              <h1 className="font-semibold">CareConnect</h1>
-              <p className="text-sm text-gray-500">
-                {currentUser?.name} •{" "}
-                {String(currentUser?.role).charAt(0).toUpperCase() +
-                  String(currentUser?.role).slice(1)}
-              </p>
+      {/* Header (match RecipientDashboard style) */}
+      <header className="bg-white border-b border-gray-200 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <span className="text-lg text-blue-700">{initials}</span>
+              </div>
+              <div>
+                <h1 className="text-xl">CareConnect</h1>
+                <p className="text-sm text-gray-500">
+                  {currentUser?.name} •{" "}
+                  {String(currentUser?.role).charAt(0).toUpperCase() +
+                    String(currentUser?.role).slice(1)}
+                </p>
+              </div>
             </div>
+
             <div className="flex gap-2">
               {currentUser?.role === "caregiver" && (
                 <Link to="/caregiver-profile">
-                  <Button variant="ghost">
+                  <Button variant="outline">
                     <User className="w-4 h-4 mr-2" />
                     Profile
                   </Button>
@@ -47,7 +62,7 @@ export function Layout({ children }: LayoutProps) {
         </div>
       </header>
 
-      {/* Navigation */}
+      {/* Navigation (keep as-is) */}
       <nav className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8">
@@ -62,6 +77,7 @@ export function Layout({ children }: LayoutProps) {
               <Home className="w-5 h-5" />
               <span>Dashboard</span>
             </Link>
+
             <Link
               to="/todos"
               className={`flex items-center gap-2 py-4 px-3 border-b-2 transition-colors ${
@@ -73,6 +89,7 @@ export function Layout({ children }: LayoutProps) {
               <CheckSquare className="w-5 h-5" />
               <span>Todo List</span>
             </Link>
+
             <Link
               to="/journal"
               className={`flex items-center gap-2 py-4 px-3 border-b-2 transition-colors ${
@@ -84,6 +101,7 @@ export function Layout({ children }: LayoutProps) {
               <BookOpen className="w-5 h-5" />
               <span>Journal</span>
             </Link>
+
             <Link
               to="/recipients"
               className={`flex items-center gap-2 py-4 px-3 border-b-2 transition-colors ${
