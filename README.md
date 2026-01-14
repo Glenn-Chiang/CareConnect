@@ -13,10 +13,9 @@ In backend directory:
 
 2. Create `.env` file with:
 ```
-DATABASE_URL=postgres://postgres:postgres@localhost:5432/hack4good?sslmode=disable
+DATABASE_URL=postgresql://devuser:devpassword@host.docker.internal:5432/hack4good
 JWT_SECRET=change-this
 PORT=8080
-GIN_MODE=debug
 ```
 
 3. Install dependencies:
