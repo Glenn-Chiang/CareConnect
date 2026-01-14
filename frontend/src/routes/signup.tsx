@@ -12,7 +12,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
 import { Heart, User, ArrowLeft } from "lucide-react";
-import { useSignup } from "../api/users";
+import { useSignup } from "@/api/auth";
 import { toast } from "sonner";
 
 export function Signup() {

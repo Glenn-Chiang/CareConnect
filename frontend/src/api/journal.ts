@@ -2,7 +2,7 @@
 // Journal Entries
 // ======================
 
-import type { JournalEntry, MoodType } from "@/types/types";
+import type { Comment, JournalEntry, MoodType } from "@/types/types";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { apiFetch } from ".";
 

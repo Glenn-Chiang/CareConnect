@@ -1,5 +1,7 @@
 import { Link, useParams } from "@tanstack/react-router";
-import { useUser, useJournalEntries, useRecipientTodos } from "../api/users";
+import { useUser} from "../api/users";
+import { useJournalEntries } from "@/api/journal";
+
 import {
   Card,
   CardContent,
@@ -18,6 +20,7 @@ import {
 import { MoodIcon } from "../components/MoodIcon";
 import { ArrowLeft, CheckSquare, BookOpen, Calendar } from "lucide-react";
 import { format } from "date-fns";
+import { useRecipientTodos } from '../api/todos';
 
 export function RecipientProfile() {
   const { recipientId } = useParams({ from: "/recipients/$recipientId" });

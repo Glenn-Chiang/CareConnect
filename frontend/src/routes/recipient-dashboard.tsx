@@ -19,15 +19,12 @@ import {
   DialogTrigger,
   DialogDescription,
 } from "../components/ui/dialog";
-import { useAuth } from "../api/auth";
+import { useAuth } from "@/auth/AuthProvider";
 import {
-  useJournalEntries,
-  useAddJournalEntry,
   useUpdateUser,
   usePendingRequests,
   useCaregiversForRecipient,
-  useComments,
-  useAddComment,
+  
 } from "../api/users";
 import { MoodIcon } from "../components/MoodIcon";
 import type { MoodType } from "../types/types";
@@ -50,6 +47,7 @@ import {
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { RequestCard } from "@/components/RequestCard";
+import { useJournalEntries, useAddJournalEntry, useAddComment, useComments } from "@/api/journal";
 
 const moodOptions: {
   type: MoodType;

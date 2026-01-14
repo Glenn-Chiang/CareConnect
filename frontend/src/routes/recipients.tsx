@@ -6,7 +6,7 @@ import {
   useCareRelationship,
   useNonCareGiversForRecipient,
 } from "../api/users";
-import { useAuth } from "../api/auth";
+import { useAuth } from "@/auth/AuthProvider";
 import {
   Card,
   CardContent,

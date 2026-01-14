@@ -1,11 +1,9 @@
 import { useState } from "react";
 import {
-  useTodos,
-  useToggleTodo,
-  useAddTodo,
+  
   useRecipients,
 } from "../api/users";
-import { useAuth } from "../api/auth";
+import { useAuth } from "@/auth/AuthProvider";
 import {
   Card,
   CardContent,
@@ -49,6 +47,7 @@ import {
   isSameMonth,
 } from "date-fns";
 import { toast } from "sonner";
+import { useAddTodo, useTodos, useToggleTodo } from "@/api/todos";
 
 export function TodoList() {
   const { currentUser } = useAuth();

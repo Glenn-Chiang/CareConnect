@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "../api/auth";
+import { useAuth } from "@/auth/AuthProvider";
 import {
   Card,
   CardContent,
