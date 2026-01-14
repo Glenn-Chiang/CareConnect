@@ -9,3 +9,8 @@ export type AuthResponse = {
   user: User;
   token: string;
 }
+
+export type LoginCredentials = {
+  username: string;
+  password: string
+}

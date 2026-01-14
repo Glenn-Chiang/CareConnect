@@ -1,18 +1,16 @@
 import {
   createContext,
   useContext,
-  useState,
   useEffect,
+  useState,
   type ReactNode,
 } from "react";
 import { type User } from "../types/types";
-import { useMutation } from "@tanstack/react-query";
 
 interface AuthContextType {
   currentUser: User | null;
   login: (username: string, password: string) => boolean;
   logout: () => void;
-  updateUser: (updatedUser: User) => void;
   isAuthenticated: boolean;
 }
 
@@ -56,22 +54,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setCurrentUser(null);
   };
 
-  const updateUser = (updatedUser: User) => {
-    // Update the user in the users array
-    const userIndex = users.findIndex((u) => u.id === updatedUser.id);
-    if (userIndex !== -1) {
-      users[userIndex] = updatedUser;
-    }
-    setCurrentUser(updatedUser);
-  };
-
   return (
     <AuthContext.Provider
       value={{
         currentUser,
         login,
         logout,
-        updateUser,
         isAuthenticated: !!currentUser,
       }}
     >

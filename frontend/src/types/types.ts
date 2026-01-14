@@ -11,7 +11,7 @@ export interface User {
   avatar?: string;
   age?: number;
   condition?: string;
-  likes?: string;
+  likes?: string; 
   dislikes?: string;
   phobias?: string;
   petPeeves?: string;
