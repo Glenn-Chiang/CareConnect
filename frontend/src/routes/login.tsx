@@ -11,12 +11,13 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Heart } from "lucide-react";
-import { useAuth } from "@/auth/AuthProvider";
 import { toast } from "sonner";
+import { useLogin } from "@/api/auth";
+import type { LoginPostData } from "@/types/auth";
 
 export function Login() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const login = useLogin();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -26,13 +27,20 @@ export function Login() {
       return;
     }
 
-    const success = login(username, password);
-    if (success) {
-      toast.success("Login successful!");
-      navigate({ to: "/" });
-    } else {
-      toast.error("Invalid username or password");
-    }
+    const loginData: LoginPostData = {
+      username,
+      password,
+    };
+
+    login.mutate(loginData, {
+      onSuccess: () => {
+        toast.success("Login successful!");
+        navigate({ to: "/" });
+      },
+      onError: () => {
+        toast.error("Invalid username or password");
+      },
+    });
   };
 
   return (
