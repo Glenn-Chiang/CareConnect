@@ -10,7 +10,7 @@ type AuthContextType = {
 const defaultAuthContext: AuthContextType = {
   user: {
     id: 'test-user',
-    role: 'caregiver',
+    role: 'recipient',
   }, // TODO: Set to null when done testing
   token: '',
   loginAction: async (_) => {
