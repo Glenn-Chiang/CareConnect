@@ -1,11 +1,9 @@
 import { useState } from "react";
-import {
-  useAllJournalEntries,
-  useComments,
-  useAddComment,
-  useRecipients,
-} from "../api/users";
-import { useAuth } from "../api/auth";
+import { useRecipients } from "../api/users";
+import { useAllJournalEntries } from "@/api/journal";
+import { useAddComment } from "@/api/journal";
+import { useComments } from "@/api/journal";
+import { useAuth } from "@/auth/AuthProvider";
 import {
   Card,
   CardContent,

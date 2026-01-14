@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { useRecipients, useTodos, useAllJournalEntries } from "../api/users";
-import { useAuth } from "../api/auth";
+import { useRecipients } from "../api/users";
+import { useAllJournalEntries } from "@/api/journal";
+import { useTodos } from "@/api/todos";
+import { useAuth } from "@/auth/AuthProvider";
 import { CheckSquare, BookOpen, Users, AlertCircle } from "lucide-react";
 import {
   Card,
