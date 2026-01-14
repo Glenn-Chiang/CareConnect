@@ -20,7 +20,7 @@ func Connect() *gorm.DB {
 		port := getenv("DB_PORT", "5432")
 		user := getenv("DB_USER", "postgres")
 		pass := getenv("DB_PASSWORD", "postgres")
-		name := getenv("DB_NAME", "myapi")
+		name := getenv("DB_NAME", "db")
 		ssl := getenv("DB_SSLMODE", "disable")
 		dsn = fmt.Sprintf(
 			"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s TimeZone=UTC",

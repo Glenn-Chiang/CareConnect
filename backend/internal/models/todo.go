@@ -11,7 +11,7 @@ const (
 )
 
 type Todo struct {
-	ID          string       `gorm:"type:uuid;primaryKey" json:"id"`
+	ID          uint       `gorm:"primaryKey" json:"id"`
 	Title       string       `gorm:"not null" json:"title"`
 	Description string       `gorm:"type:text;not null" json:"description"`
 	DueDate     time.Time    `gorm:"not null;index" json:"dueDate"`

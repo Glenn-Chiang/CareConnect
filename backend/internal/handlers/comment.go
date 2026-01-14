@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 
 	"hack4good/internal/models"
@@ -51,7 +50,6 @@ func (h CommentHandler) Create(c *gin.Context) {
 	}
 
 	comment := models.Comment{
-		ID:             uuid.NewString(),
 		JournalEntryID: req.JournalEntryID,
 		AuthorID:       req.AuthorID,
 		Content:        req.Content,

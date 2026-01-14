@@ -38,7 +38,6 @@ func main() {
 	r.PUT("/journal-entries/:id", journalHandler.Update)
 	r.DELETE("/journal-entries/:id", journalHandler.Delete)
 
-	
 	commentHandler := handlers.CommentHandler{DB: DB}
 	r.POST("/comments", commentHandler.Create)
 	r.GET("/comments", commentHandler.List)
@@ -48,11 +47,10 @@ func main() {
 
 	todoHandler := handlers.TodoHandler{DB: DB}
 	r.POST("/todos", todoHandler.Create)
-	r.GET("/todos", todoHandler.List) // supports ?recipientId=123&caregiverId=123&completed=true&priority=high
+	r.GET("/todos", todoHandler.List)
 	r.GET("/todos/:id", todoHandler.GetByID)
 	r.PUT("/todos/:id", todoHandler.Update)
 	r.DELETE("/todos/:id", todoHandler.Delete)
-
 
 	if err := r.Run(":8080"); err != nil {
 		log.Fatalf("server failed: %v", err)

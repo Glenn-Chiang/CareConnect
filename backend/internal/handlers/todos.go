@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 
 	"hack4good/internal/models"
@@ -60,7 +59,6 @@ func (h TodoHandler) Create(c *gin.Context) {
 	}
 
 	todo := models.Todo{
-		ID:          uuid.NewString(),
 		Title:       req.Title,
 		Description: req.Description,
 		DueDate:     due,

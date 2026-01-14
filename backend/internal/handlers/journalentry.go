@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 
 	"hack4good/internal/models"
@@ -40,7 +39,6 @@ func (h JournalHandler) Create(c *gin.Context) {
 	}
 
 	entry := models.JournalEntry{
-		ID:          uuid.NewString(),
 		RecipientID: req.RecipientID,
 		Content:     req.Content,
 		Mood:        req.Mood,

@@ -12,7 +12,7 @@ const (
 )
 
 type JournalEntry struct {
-	ID          string   `gorm:"type:uuid;primaryKey" json:"id"`
+	ID          uint   `gorm:"primaryKey" json:"id"`
 	RecipientID uint     `gorm:"not null;index" json:"recipientId"` // FK -> recipients.id
 	Content     string   `gorm:"type:text;not null" json:"content"`
 	Mood        MoodType `gorm:"type:varchar(20);not null" json:"mood"`
