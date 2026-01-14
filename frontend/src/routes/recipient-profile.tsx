@@ -1,5 +1,5 @@
 import { Link, useParams } from "@tanstack/react-router";
-import { useUser} from "../api/users";
+import { useGetUser } from "../api/users";
 import { useJournalEntries } from "@/api/journal";
 
 import {
@@ -20,11 +20,11 @@ import {
 import { MoodIcon } from "../components/MoodIcon";
 import { ArrowLeft, CheckSquare, BookOpen, Calendar } from "lucide-react";
 import { format } from "date-fns";
-import { useRecipientTodos } from '../api/todos';
+import { useRecipientTodos } from "../api/todos";
 
 export function RecipientProfile() {
   const { recipientId } = useParams({ from: "/recipients/$recipientId" });
-  const { data: recipient, isLoading: userLoading } = useUser(recipientId);
+  const { data: recipient, isLoading: userLoading } = useGetUser(recipientId);
   const { data: allTodos } = useRecipientTodos(recipientId);
   const { data: journalEntries } = useJournalEntries(recipientId);
 

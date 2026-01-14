@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import {
-  useRecipients,
+  useGetRecipientsByCaregiver,
   useAssignRecipient,
   useCareRelationship,
   useNonCareGiversForRecipient,
@@ -30,7 +30,9 @@ import { toast } from "sonner";
 
 export function Recipients() {
   const { currentUser } = useAuth();
-  const { data: recipients, isLoading } = useRecipients(currentUser?.id || "");
+  const { data: recipients, isLoading } = useGetRecipientsByCaregiver(
+    currentUser?.id || ""
+  );
   const assignRecipient = useAssignRecipient();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
