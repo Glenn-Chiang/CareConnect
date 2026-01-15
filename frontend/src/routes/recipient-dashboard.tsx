@@ -21,6 +21,8 @@ import {
 } from "../components/ui/dialog";
 import { useAuth } from "@/auth/AuthProvider";
 import {
+  useUpdateUser,
+  useGetPendingRequestsForRecipient,
   useUpdateRecipient,
   usePendingRequests,
   useCaregiversForRecipient,
@@ -96,11 +98,10 @@ const moodOptions: {
 
 export function RecipientDashboard() {
   const { currentUser, logout } = useAuth();
-
-  const { data: journalEntries } = useJournalEntries(
-    currentUser?.recipientId || ""
+  const { data: journalEntries } = useJournalEntries(currentUser?.id || "");
+  const { data: pendingRequests } = useGetPendingRequestsForRecipient(
+    currentUser?.id || ""
   );
-  const { data: pendingRequests } = usePendingRequests(currentUser?.id || "");
   const { data: caregivers } = useCaregiversForRecipient(currentUser?.id || "");
   const addJournalEntry = useAddJournalEntry();
   const updateRecipient = useUpdateRecipient();
