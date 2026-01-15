@@ -54,6 +54,7 @@ func main() {
 
 	caregiverHandler := handlers.CaregiverHandler{DB: DB}
 	r.GET("/caregivers", caregiverHandler.List)
+	r.PUT("/caregivers/:id", caregiverHandler.Update)
 
 	careRequestHandler := handlers.CareRequestHandler{DB: DB}
 	r.POST("/requests", careRequestHandler.CreateRequest)
