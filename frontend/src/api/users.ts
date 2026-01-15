@@ -39,6 +39,7 @@ export const useGetCaregiversForRecipient = (recipientId: string) =>
     queryKey: ["caregivers", recipientId],
     queryFn: () =>
       apiFetch<Caregiver[]>(`/recipients/${recipientId}/caregivers`),
+    enabled: !!recipientId,
   });
 
 export const useGetCaregiverByUserId = (userId: string) =>
@@ -103,6 +104,7 @@ export const useGetPendingRequestsForRecipient = (recipientId: string) =>
       apiFetch<CareRequest[]>(
         `/recipients/${recipientId}/requests?status=pending`
       ),
+    enabled: !!recipientId,
   });
 
 export const useRespondToRequest = () => {
