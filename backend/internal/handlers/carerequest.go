@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -76,6 +77,7 @@ func (h CareRequestHandler) CreateRequest(c *gin.Context) {
 		CaregiverID: body.CaregiverID,
 		RecipientID: body.RecipientID,
 		Status:      models.CareRequestPending,
+		RequestedAt: time.Now(),
 	}
 
 	if err := h.DB.Create(&req).Error; err != nil {
@@ -96,7 +98,13 @@ func (h CareRequestHandler) ListRecipientRequests(c *gin.Context) {
 
 	status := strings.ToLower(strings.TrimSpace(c.Query("status")))
 
-	q := h.DB.Model(&models.CareRequest{}).Where("recipient_id = ?", recipientID).Order("created_at desc")
+	q := h.DB.Model(&models.CareRequest{}).
+		Preload("Caregiver").
+		Preload("Recipient").
+		Preload("Caregiver.User").
+		Preload("Recipient.User").
+		Where("recipient_id = ?", recipientID).
+		Order("created_at desc")
 	if status != "" {
 		switch models.CareRequestStatus(status) {
 		case models.CareRequestPending, models.CareRequestAccepted, models.CareRequestRejected:
@@ -112,7 +120,7 @@ func (h CareRequestHandler) ListRecipientRequests(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
+	
 	c.JSON(http.StatusOK, requests)
 }
 
@@ -151,12 +159,16 @@ func (h CareRequestHandler) RespondToRequest(c *gin.Context) {
 	}
 
 	newStatus := models.CareRequestStatus(body.Status)
+	now := time.Now()
 
 	err = h.DB.Transaction(func(tx *gorm.DB) error {
 		// Update request status
 		if err := tx.Model(&models.CareRequest{}).
 			Where("id = ? AND status = ?", req.ID, models.CareRequestPending).
-			Update("status", newStatus).Error; err != nil {
+			Updates(&models.CareRequest{
+				Status: newStatus,
+				RespondedAt: &now,
+			}).Error; err != nil {
 			return err
 		}
 

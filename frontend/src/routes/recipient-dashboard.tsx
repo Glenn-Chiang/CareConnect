@@ -53,6 +53,7 @@ import {
   useAddComment,
   useComments,
 } from "@/api/journal";
+import Recorder from "@/components/Recorder.tsx";
 
 const moodOptions: {
   type: MoodType;
@@ -96,11 +97,14 @@ const moodOptions: {
 
 export function RecipientDashboard() {
   const { currentUser, logout } = useAuth();
-  const { data: journalEntries } = useJournalEntries(currentUser?.id || "");
+  const { data: recipient } = useGetRecipientByUserId(currentUser?.id || "");
+
+  const { data: journalEntries } = useJournalEntries(recipient?.id || "");
   const { data: pendingRequests } = useGetPendingRequestsForRecipient(
-    currentUser?.id || ""
+    recipient?.id || ""
   );
-  const { data: caregivers } = useCaregiversForRecipient(currentUser?.id || "");
+  const { data: caregivers } = useCaregiversForRecipient(recipient?.id || "");
+
   const addJournalEntry = useAddJournalEntry();
   const updateRecipient = useUpdateRecipient();
   const addCommentMutation = useAddComment();
@@ -503,21 +507,7 @@ export function RecipientDashboard() {
 
             {/* Voice Message Option */}
             <div>
-              <Button
-                variant={showVoiceRecording ? "default" : "outline"}
-                onClick={() => setShowVoiceRecording(!showVoiceRecording)}
-                className="w-full sm:w-auto"
-              >
-                <Mic className="w-4 h-4 mr-2" />
-                {showVoiceRecording
-                  ? "Voice message will be recorded"
-                  : "Add voice message"}
-              </Button>
-              {showVoiceRecording && (
-                <p className="text-sm text-gray-500 mt-2">
-                  Voice recording feature will be available when you submit
-                </p>
-              )}
+              <Recorder />
             </div>
 
             {/* Submit Button */}

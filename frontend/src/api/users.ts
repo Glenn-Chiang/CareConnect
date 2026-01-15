@@ -35,6 +35,11 @@ export const useUpdateCaregivers = () => {
 };
 
 // ======================
+// Caregivers
+// ======================
+
+
+// ======================
 // Recipients
 // ======================
 export const useGetRecipientsByCaregiver = (caregiverId: string) =>
@@ -43,12 +48,25 @@ export const useGetRecipientsByCaregiver = (caregiverId: string) =>
     queryFn: () =>
       apiFetch<Recipient[]>(`/caregivers/${caregiverId}/recipients`),
   });
-
-export const useGetAllRecipients = () =>
+  
+export const useGetAllRecipients = (caregiverId?: string) =>
   useQuery({
     queryKey: ["recipients"],
-    queryFn: () => apiFetch<Recipient[]>("/recipients"),
+    queryFn: () => apiFetch<Recipient[]>(`/recipients?caregiverId=${caregiverId}`),
   });
+
+  export const useGetRecipientById = (recipientId: number) =>
+    useQuery({
+      queryKey: ['recipient', recipientId],
+      queryFn: () => apiFetch<User>(`/recipients/${recipientId}`),
+      enabled: recipientId > 0,
+  });
+  
+  export const useGetRecipientByUserId = (userId: string) => 
+    useQuery({
+      queryKey: ["recipients", userId],
+    queryFn: () => apiFetch<Recipient>(`/recipients/user/${userId}`),
+  })
 
   export const useRecipientFromId = (recipientId: string) =>
   useQuery({

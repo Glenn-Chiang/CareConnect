@@ -236,7 +236,7 @@ export function Dashboard() {
                     </span>
                   </div>
                   <div>
-                    <p className="text-sm">{recipient.name}</p>
+                    <p className="text-sm">{recipient.user.name}</p>
                     <p className="text-xs text-gray-500">
                       {recipient.age} years old
                     </p>

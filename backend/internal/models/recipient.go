@@ -36,3 +36,8 @@ type RecipientReturned struct {
 	Phobias   *string `json:"phobias"`
 	PetPeeves *string `json:"petPeeves"`
 }
+type RecipientWithRequest struct {
+	Recipient
+	RequestStatus *CareRequestStatus `json:"requestStatus"`
+	RequestID     *uint              `json:"requestId"`
+}
