@@ -19,7 +19,7 @@ export const useTodos = (caregiverId: string) =>
   useQuery({
     queryKey: ["todos", caregiverId],
     enabled: !!caregiverId,
-    queryFn: () => apiFetch<Todo[]>(`/caregivers/${caregiverId}/todos`),
+    queryFn: () => apiFetch<Todo[]>(`/todos/${caregiverId}`),
   });
 
 export const useToggleTodo = () => {

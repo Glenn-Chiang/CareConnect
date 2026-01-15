@@ -18,11 +18,6 @@ import {
   CardTitle,
 } from "../components/ui/card";
 import { Textarea } from "../components/ui/textarea";
-import { MoodIcon } from "../components/MoodIcon";
-import { format } from "date-fns";
-import { MessageCircle, Mic, ChevronDown, ChevronUp } from "lucide-react";
-import { toast } from "sonner";
-import { useGetRecipientById } from "@/api/users";
 import type { JournalEntry } from "@/types/types";
 
 export function Journal() {

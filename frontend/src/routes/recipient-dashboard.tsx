@@ -22,8 +22,9 @@ import {
 import { useAuth } from "@/auth/AuthProvider";
 import {
   useGetPendingRequestsForRecipient,
-  useCaregiversForRecipient,
-  useGetRecipientByUserId,
+  useGetRecipientById,
+  useUpdateRecipient,
+  useGetCaregiversForRecipient,
 } from "../api/users";
 import { MoodIcon } from "../components/MoodIcon";
 import type { MoodType } from "../types/types";
@@ -96,7 +97,9 @@ const moodOptions: {
 
 export function RecipientDashboard() {
   const { currentUser, logout } = useAuth();
-  const { data: recipient } = useGetRecipientByUserId(currentUser?.id || "");
+  const { data: recipient } = useGetRecipientById(
+    currentUser?.recipientId || ""
+  );
 
   const { data: journalEntries } = useJournalEntries(recipient?.id || "");
   const { data: pendingRequests } = useGetPendingRequestsForRecipient(
