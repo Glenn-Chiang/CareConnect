@@ -57,11 +57,11 @@ export const useGetAllRecipients = (caregiverId?: string) =>
       apiFetch<Recipient[]>(`/recipients?caregiverId=${caregiverId}`),
   });
 
-export const useGetRecipientById = (recipientId: number) =>
+export const useGetRecipientById = (recipientId: string) =>
   useQuery({
     queryKey: ["recipient", recipientId],
-    queryFn: () => apiFetch<User>(`/recipients/${recipientId}`),
-    enabled: recipientId > 0,
+    queryFn: () => apiFetch<Recipient>(`/recipients/${recipientId}`),
+    enabled: !!recipientId,
   });
 
 export const useGetRecipientByUserId = (userId: string) =>

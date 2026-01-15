@@ -1,21 +1,24 @@
-import { useState } from "react";
-import { useAcceptedJournalEntries } from "@/api/journal";
-import { useAddComment } from "@/api/journal";
-import { useComments } from "@/api/journal";
+import {
+  useAcceptedJournalEntries,
+  useAddComment,
+  useComments,
+} from "@/api/journal";
+import { useGetRecipientById } from "@/api/users";
 import { useAuth } from "@/auth/AuthProvider";
+import { format } from "date-fns";
+import { ChevronDown, ChevronUp, MessageCircle, Mic } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { MoodIcon } from "../components/MoodIcon";
+import { Button } from "../components/ui/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "../components/ui/card";
-import { Button } from "../components/ui/button";
 import { Textarea } from "../components/ui/textarea";
-import { MoodIcon } from "../components/MoodIcon";
-import { format } from "date-fns";
-import { MessageCircle, Mic, ChevronDown, ChevronUp } from "lucide-react";
-import { toast } from "sonner";
-import { useGetUser } from "@/api/users";
+import type { JournalEntry } from "@/types/types";
 
 export function Journal() {
   const { currentUser } = useAuth();
@@ -108,7 +111,7 @@ export function Journal() {
 }
 
 interface JournalEntryCardProps {
-  entry: any;
+  entry: JournalEntry;
   recipientId: string;
   isExpanded: boolean;
   onToggleExpand: () => void;
@@ -127,7 +130,6 @@ function JournalEntryCard({
   onAddComment,
 }: JournalEntryCardProps) {
   const { data: comments } = useComments(entry.id);
-  const { data: recipient } = useGetUser(recipientId);
 
   return (
     <Card>
@@ -136,14 +138,16 @@ function JournalEntryCard({
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
               <span className="text-sm text-blue-700">
-                {recipient?.name
+                {entry.recipient.user.name
                   .split(" ")
                   .map((n: string) => n[0])
                   .join("") || "??"}
               </span>
             </div>
             <div>
-              <CardTitle className="text-base">{recipient?.name}</CardTitle>
+              <CardTitle className="text-base">
+                {entry.recipient.user.name}
+              </CardTitle>
               <p className="text-sm text-gray-500">
                 {format(entry.createdAt, "MMM d, yyyy h:mm a")}
               </p>
