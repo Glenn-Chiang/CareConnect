@@ -37,8 +37,15 @@ export const useUpdateUser = () => {
 export const useGetCaregiversForRecipient = (recipientId: string) =>
   useQuery({
     queryKey: ["caregivers", recipientId],
-    queryFn: () => apiFetch<Caregiver[]>(`/recipients/${recipientId}/caregivers`),
+    queryFn: () =>
+      apiFetch<Caregiver[]>(`/recipients/${recipientId}/caregivers`),
   });
+
+export const useGetCaregiverByUserId = (userId: string) =>
+  useQuery({
+    queryKey: ["caregivers", userId],
+    queryFn: () => apiFetch<Caregiver>(`/caregivers/user/${userId}`),
+});
 
 // ======================
 // Recipients

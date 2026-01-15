@@ -55,6 +55,7 @@ func main() {
 	caregiverHandler := handlers.CaregiverHandler{DB: DB}
 	r.GET("/caregivers", caregiverHandler.List)
 	r.GET("/recipients/:id/caregivers", caregiverHandler.ListByRecipient)
+	r.GET("/caregivers/user/:userId", caregiverHandler.GetByUserID)
 
 	careRequestHandler := handlers.CareRequestHandler{DB: DB}
 	r.POST("/requests", careRequestHandler.CreateRequest)

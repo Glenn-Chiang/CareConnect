@@ -3,8 +3,8 @@ import {
   useAddComment,
   useComments,
 } from "@/api/journal";
-import { useGetRecipientById } from "@/api/users";
 import { useAuth } from "@/auth/AuthProvider";
+import type { JournalEntry } from "@/types/types";
 import { format } from "date-fns";
 import { ChevronDown, ChevronUp, MessageCircle, Mic } from "lucide-react";
 import { useState } from "react";
@@ -18,7 +18,6 @@ import {
   CardTitle,
 } from "../components/ui/card";
 import { Textarea } from "../components/ui/textarea";
-import type { JournalEntry } from "@/types/types";
 
 export function Journal() {
   const { currentUser } = useAuth();
