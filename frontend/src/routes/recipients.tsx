@@ -141,15 +141,6 @@ export function Recipients() {
                                 {recipient.condition &&
                                   ` • ${recipient.condition}`}
                               </p>
-                              {recipient.requestStatus && (
-                                <Badge
-                                  variant="outline"
-                                  className="mt-1 text-xs"
-                                >
-                                  <Clock className="w-3 h-3 mr-1" />
-                                  Request Pending
-                                </Badge>
-                              )}
                             </div>
                           </div>
                           <Button

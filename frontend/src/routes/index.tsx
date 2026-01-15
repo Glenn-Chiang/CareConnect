@@ -229,14 +229,14 @@ export function Dashboard() {
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
                     <span className="font-semibold text-blue-700">
-                      {recipient.name
+                      {recipient.user.name
                         .split(" ")
                         .map((n) => n[0])
                         .join("")}
                     </span>
                   </div>
                   <div>
-                    <p className="text-sm">{recipient.name}</p>
+                    <p className="text-sm">{recipient.user.name}</p>
                     <p className="text-xs text-gray-500">
                       {recipient.age} years old
                     </p>
