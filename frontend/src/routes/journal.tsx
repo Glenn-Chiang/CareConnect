@@ -15,7 +15,7 @@ import { MoodIcon } from "../components/MoodIcon";
 import { format } from "date-fns";
 import { MessageCircle, Mic, ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
-import { useGetUser } from "@/api/users";
+import { useGetRecipientById } from "@/api/users";
 
 export function Journal() {
   const { currentUser } = useAuth();
@@ -127,7 +127,7 @@ function JournalEntryCard({
   onAddComment,
 }: JournalEntryCardProps) {
   const { data: comments } = useComments(entry.id);
-  const { data: recipient } = useGetUser(recipientId);
+  const { data: recipient } = useGetRecipientById(recipientId);
 
   return (
     <Card>

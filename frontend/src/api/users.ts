@@ -10,11 +10,12 @@ import { useAuth } from "@/auth/AuthProvider";
 // ======================
 // Users
 // ======================
-export const useGetUser = (userId: string) =>
-  useQuery({
-    queryKey: ["user", userId],
-    queryFn: () => apiFetch<User>(`/users/${userId}`),
-  });
+
+
+
+// ======================
+// Caregivers
+// ======================
 
 export const useUpdateCaregivers = () => {
   const queryClient = useQueryClient();
@@ -33,12 +34,6 @@ export const useUpdateCaregivers = () => {
     },
   });
 };
-
-// ======================
-// Caregivers
-// ======================
-
-
 // ======================
 // Recipients
 // ======================
@@ -54,26 +49,13 @@ export const useGetAllRecipients = (caregiverId?: string) =>
     queryKey: ["recipients"],
     queryFn: () => apiFetch<Recipient[]>(`/recipients?caregiverId=${caregiverId}`),
   });
-
-  export const useGetRecipientById = (recipientId: number) =>
-    useQuery({
-      queryKey: ['recipient', recipientId],
-      queryFn: () => apiFetch<User>(`/recipients/${recipientId}`),
-      enabled: recipientId > 0,
-  });
   
-  export const useGetRecipientByUserId = (userId: string) => 
+  export const useGetRecipientById = (recipientId: string) => 
     useQuery({
-      queryKey: ["recipients", userId],
-    queryFn: () => apiFetch<Recipient>(`/recipients/user/${userId}`),
-  })
-
-  export const useRecipientFromId = (recipientId: string) =>
-  useQuery({
-    queryKey: ['recipient', recipientId],
-    queryFn: () => apiFetch<Recipient>(`/recipients/${recipientId}`),
-    enabled: recipientId !== "",
-  });
+      queryKey: ["recipients", recipientId],
+      queryFn: () => apiFetch<Recipient>(`/recipients/${recipientId}`),
+      enabled: recipientId !== "",
+    })
 
   export const useUpdateRecipient = () => {
     const queryClient = useQueryClient();
@@ -117,6 +99,7 @@ export const useGetPendingRequestsForRecipient = (recipientId: string) =>
       apiFetch<CareRequest[]>(
         `/recipients/${recipientId}/requests?status=pending`
       ),
+      enabled: recipientId !== "",
   });
 
 export const useRespondToRequest = () => {
@@ -143,4 +126,5 @@ export const useCaregiversForRecipient = (recipientId: string) =>
   useQuery({
     queryKey: ["caregivers", recipientId],
     queryFn: () => apiFetch<User[]>(`/recipients/${recipientId}/caregivers`),
+    enabled: recipientId !== "",
   });

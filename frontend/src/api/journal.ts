@@ -11,12 +11,14 @@ export const useJournalEntries = (recipientId: string) =>
     queryKey: ["journal-entries", recipientId],
     queryFn: () =>
       apiFetch<JournalEntry[]>(`/journal-entries?recipientId=${recipientId}`),
+    enabled: recipientId !== "",
   });
 
 export const useAcceptedJournalEntries = (caregiverId: string) =>
   useQuery({
     queryKey: ["all-journal-entries"],
     queryFn: () => apiFetch<JournalEntry[]>(`/journal-entries/accepted?caregiverId=${caregiverId}`),
+    enabled: caregiverId !== "",
   });
 
 export const useAddJournalEntry = () => {

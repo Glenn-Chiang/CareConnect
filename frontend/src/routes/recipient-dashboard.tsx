@@ -24,7 +24,7 @@ import {
   useGetPendingRequestsForRecipient,
   useUpdateRecipient,
   useCaregiversForRecipient,
-  useRecipientFromId,
+  useGetRecipientById,
 } from "../api/users";
 import { MoodIcon } from "../components/MoodIcon";
 import type { MoodType } from "../types/types";
@@ -97,7 +97,9 @@ const moodOptions: {
 
 export function RecipientDashboard() {
   const { currentUser, logout } = useAuth();
-  const { data: recipient } = useGetRecipientByUserId(currentUser?.id || "");
+  const { data: recipient } = useGetRecipientById(
+    currentUser?.recipientId || ""
+  );
 
   const { data: journalEntries } = useJournalEntries(recipient?.id || "");
   const { data: pendingRequests } = useGetPendingRequestsForRecipient(
@@ -108,9 +110,6 @@ export function RecipientDashboard() {
   const addJournalEntry = useAddJournalEntry();
   const updateRecipient = useUpdateRecipient();
   const addCommentMutation = useAddComment();
-  const { data: recipient } = useRecipientFromId(
-    currentUser?.recipientId || ""
-  );
 
   const [journalContent, setJournalContent] = useState("");
   const [selectedMood, setSelectedMood] = useState<MoodType | null>(null);
@@ -158,6 +157,7 @@ export function RecipientDashboard() {
   };
 
   const handleUpdateProfile = () => {
+    console.log(recipient);
     if (!profileData.name.trim()) {
       toast.error("Name cannot be empty");
       return;
