@@ -1,32 +1,31 @@
-import { useState } from "react";
+import { useAuth } from "@/auth/AuthProvider";
 import { Link } from "@tanstack/react-router";
+import { Clock, Plus, Search, Users } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import {
+  useGetAllRecipients,
   useGetRecipientsByCaregiver,
   useSendRequest,
-  
-  useGetAllRecipients,
 } from "../api/users";
-import { useAuth } from "@/auth/AuthProvider";
+import { Badge } from "../components/ui/badge";
+import { Button } from "../components/ui/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "../components/ui/card";
-import { Button } from "../components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogDescription,
 } from "../components/ui/dialog";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Badge } from "../components/ui/badge";
-import { Users, Plus, Search, Clock } from "lucide-react";
-import { toast } from "sonner";
 
 export function Recipients() {
   const { currentUser } = useAuth();
@@ -113,13 +112,10 @@ export function Recipients() {
                   </p>
                 )}
                 {filteredRecipients.map((recipient) => {
-                  const { data: relationship } = useGetRequest(
-                    currentUser?.id || "",
-                    recipient.id
-                  );
-
-                  const isPending = relationship?.status === "pending";
-
+                  const disabled =
+                    assignRecipient.isPending ||
+                    recipient.requestStatus === "accepted" ||
+                    recipient.requestStatus === "pending";
                   return (
                     <Card
                       key={recipient.id}
@@ -145,7 +141,7 @@ export function Recipients() {
                                 {recipient.condition &&
                                   ` • ${recipient.condition}`}
                               </p>
-                              {isPending && (
+                              {recipient.requestStatus && (
                                 <Badge
                                   variant="outline"
                                   className="mt-1 text-xs"
@@ -158,10 +154,14 @@ export function Recipients() {
                           </div>
                           <Button
                             onClick={() => handleSendRequest(recipient.id)}
-                            disabled={assignRecipient.isPending || isPending}
+                            disabled={disabled}
                             size="sm"
                           >
-                            {isPending ? "Pending" : "Send Request"}
+                            {recipient.requestStatus === "pending"
+                              ? "Pending"
+                              : recipient.requestStatus === "accepted"
+                              ? "Accepted"
+                              : "Send Request"}
                           </Button>
                         </div>
                       </CardContent>

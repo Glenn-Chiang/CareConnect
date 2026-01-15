@@ -11,6 +11,8 @@ export interface Recipient {
   dislikes?: string;
   phobias?: string;
   petPeeves?: string;
+
+  requestStatus?: CareRequestStatus
 }
 
 export interface Caregiver {
