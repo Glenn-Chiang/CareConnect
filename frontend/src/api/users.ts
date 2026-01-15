@@ -15,13 +15,6 @@ export const useGetUser = (userId: string) =>
     queryFn: () => apiFetch<User>(`/users/${userId}`),
   });
 
-export const useRecipientFromId = (recipientId: number) =>
-  useQuery({
-    queryKey: ['recipient', recipientId],
-    queryFn: () => apiFetch<User>(`/recipients/${recipientId}`),
-    enabled: recipientId > 0,
-  });
-
 export const useUpdateUser = () => {
   const queryClient = useQueryClient();
 
@@ -54,6 +47,27 @@ export const useGetAllRecipients = () =>
     queryFn: () =>
       apiFetch<Recipient[]>('/recipients'),
   });
+
+  export const useRecipientFromId = (recipientId: string) =>
+  useQuery({
+    queryKey: ['recipient', recipientId],
+    queryFn: () => apiFetch<Recipient>(`/recipients/${recipientId}`),
+    enabled: recipientId !== "",
+  });
+
+  export const useUpdateRecipient = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: (data: Partial<Recipient> & { id: string }) =>
+        apiFetch<Recipient>(`/recipients/${data.id}`, {
+          method: "PUT",
+          body: JSON.stringify(data),
+        }),
+      onSuccess: (recipient) => {
+        queryClient.invalidateQueries({ queryKey: ['recipient', recipient.id] }); 
+      },
+    });
+  };
 
 // ======================
 // Care Relationships

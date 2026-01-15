@@ -13,3 +13,26 @@ type Recipient struct {
 	Phobias   *string `gorm:"type:text" json:"phobias"`
 	PetPeeves *string `gorm:"type:text" json:"petPeeves"`
 }
+
+type RecipientRequest struct {
+	Name      *string `json:"name"` // goes to users table
+	Age       *int    `json:"age"`
+	Condition *string `json:"condition"`
+	Likes     *string `json:"likes"`
+	Dislikes  *string `json:"dislikes"`
+	Phobias   *string `json:"phobias"`
+	PetPeeves *string `json:"petPeeves"`
+}
+
+type RecipientReturned struct {
+	ID     uint   `json:"id"`
+	UserID uint   `json:"userId"`
+	Name   string `json:"name"`
+
+	Age       *int    `json:"age"`
+	Condition *string `json:"condition"`
+	Likes     *string `json:"likes"`
+	Dislikes  *string `json:"dislikes"`
+	Phobias   *string `json:"phobias"`
+	PetPeeves *string `json:"petPeeves"`
+}

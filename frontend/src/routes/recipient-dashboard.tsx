@@ -21,9 +21,10 @@ import {
 } from "../components/ui/dialog";
 import { useAuth } from "@/auth/AuthProvider";
 import {
-  useUpdateUser,
+  useUpdateRecipient,
   usePendingRequests,
   useCaregiversForRecipient,
+  useRecipientFromId,
 } from "../api/users";
 import { MoodIcon } from "../components/MoodIcon";
 import type { MoodType } from "../types/types";
@@ -102,8 +103,11 @@ export function RecipientDashboard() {
   const { data: pendingRequests } = usePendingRequests(currentUser?.id || "");
   const { data: caregivers } = useCaregiversForRecipient(currentUser?.id || "");
   const addJournalEntry = useAddJournalEntry();
-  const updateUser = useUpdateUser();
+  const updateRecipient = useUpdateRecipient();
   const addCommentMutation = useAddComment();
+  const { data: recipient } = useRecipientFromId(
+    currentUser?.recipientId || ""
+  );
 
   const [journalContent, setJournalContent] = useState("");
   const [selectedMood, setSelectedMood] = useState<MoodType | null>(null);
@@ -114,12 +118,12 @@ export function RecipientDashboard() {
   );
   const [commentText, setCommentText] = useState<Record<string, string>>({});
   const [profileData, setProfileData] = useState({
-    name: currentUser?.name || "",
-    condition: currentUser?.condition || "",
-    likes: currentUser?.likes || "",
-    dislikes: currentUser?.dislikes || "",
-    phobias: currentUser?.phobias || "",
-    petPeeves: currentUser?.petPeeves || "",
+    name: recipient?.name || "",
+    condition: recipient?.condition || "",
+    likes: recipient?.likes || "",
+    dislikes: recipient?.dislikes || "",
+    phobias: recipient?.phobias || "",
+    petPeeves: recipient?.petPeeves || "",
   });
 
   const handleSubmitJournal = () => {
@@ -157,9 +161,12 @@ export function RecipientDashboard() {
       return;
     }
 
-    updateUser.mutate(
+    console.log(recipient);
+    console.log(currentUser?.recipientId);
+
+    updateRecipient.mutate(
       {
-        id: currentUser?.id || "",
+        id: recipient?.id || "",
         name: profileData.name,
         condition: profileData.condition,
         likes: profileData.likes,
@@ -244,12 +251,12 @@ export function RecipientDashboard() {
                     variant="outline"
                     onClick={() =>
                       setProfileData({
-                        name: currentUser?.name || "",
-                        condition: currentUser?.condition || "",
-                        likes: currentUser?.likes || "",
-                        dislikes: currentUser?.dislikes || "",
-                        phobias: currentUser?.phobias || "",
-                        petPeeves: currentUser?.petPeeves || "",
+                        name: recipient?.name || "",
+                        condition: recipient?.condition || "",
+                        likes: recipient?.likes || "",
+                        dislikes: recipient?.dislikes || "",
+                        phobias: recipient?.phobias || "",
+                        petPeeves: recipient?.petPeeves || "",
                       })
                     }
                   >
@@ -374,7 +381,7 @@ export function RecipientDashboard() {
                     <Button
                       onClick={handleUpdateProfile}
                       className="w-full text-lg py-6"
-                      disabled={updateUser.isPending}
+                      disabled={updateRecipient.isPending}
                     >
                       Save Profile
                     </Button>
