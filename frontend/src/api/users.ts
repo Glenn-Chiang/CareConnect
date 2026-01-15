@@ -56,6 +56,7 @@ export const useGetRecipientsByCaregiver = (caregiverId: string) =>
     queryKey: ["recipients", caregiverId],
     queryFn: () =>
       apiFetch<Recipient[]>(`/caregivers/${caregiverId}/recipients`),
+    enabled: !!caregiverId,
   });
 
 export const useGetAllRecipients = (caregiverId?: string) =>
@@ -63,6 +64,7 @@ export const useGetAllRecipients = (caregiverId?: string) =>
     queryKey: ["recipients"],
     queryFn: () =>
       apiFetch<Recipient[]>(`/recipients?caregiverId=${caregiverId}`),
+    enabled: !!caregiverId,
   });
 
 export const useGetRecipientById = (recipientId: string) =>
