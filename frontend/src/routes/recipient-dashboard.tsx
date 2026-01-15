@@ -53,6 +53,7 @@ import {
   useAddComment,
   useComments,
 } from "@/api/journal";
+import Recorder from "@/components/Recorder.tsx";
 
 const moodOptions: {
   type: MoodType;
@@ -504,21 +505,7 @@ export function RecipientDashboard() {
 
             {/* Voice Message Option */}
             <div>
-              <Button
-                variant={showVoiceRecording ? "default" : "outline"}
-                onClick={() => setShowVoiceRecording(!showVoiceRecording)}
-                className="w-full sm:w-auto"
-              >
-                <Mic className="w-4 h-4 mr-2" />
-                {showVoiceRecording
-                  ? "Voice message will be recorded"
-                  : "Add voice message"}
-              </Button>
-              {showVoiceRecording && (
-                <p className="text-sm text-gray-500 mt-2">
-                  Voice recording feature will be available when you submit
-                </p>
-              )}
+              <Recorder/>
             </div>
 
             {/* Submit Button */}
