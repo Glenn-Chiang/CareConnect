@@ -34,18 +34,21 @@ export interface Todo {
   id: string;
   title: string;
   description: string;
-  dueDate: Date;
+  dueDate: string;
   completed: boolean;
   recipientId: string;
   caregiverId: string;
   priority: 'low' | 'medium' | 'high';
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type MoodType = 'happy' | 'sad' | 'neutral' | 'anxious' | 'excited';
 
 export interface JournalEntry {
-  id: number;
-  recipientId: number;
+  id: string;
+  recipientId: string;
+  recipientName: string;
   content: string;
   mood: MoodType;
   createdAt: Date;

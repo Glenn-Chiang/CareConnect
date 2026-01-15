@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { useRecipients } from "../api/users";
 import { useAcceptedJournalEntries } from "@/api/journal";
+import { useGetRecipientsByCaregiver } from "../api/users";
 import { useTodos } from "@/api/todos";
 import { useAuth } from "@/auth/AuthProvider";
 import { CheckSquare, BookOpen, Users, AlertCircle } from "lucide-react";
@@ -17,9 +17,8 @@ import { MoodIcon } from "../components/MoodIcon";
 
 export function Dashboard() {
   const { currentUser } = useAuth();
-  const { data: recipients, isLoading: recipientsLoading } = useRecipients(
-    currentUser?.id || ""
-  );
+  const { data: recipients, isLoading: recipientsLoading } =
+    useGetRecipientsByCaregiver(currentUser?.id || "");
   const { data: todos, isLoading: todosLoading } = useTodos(
     currentUser?.id || ""
   );
@@ -181,16 +180,13 @@ export function Dashboard() {
                 <p className="text-sm text-gray-500">No journal entries yet</p>
               )}
               {recentJournals.map((entry) => {
-                const recipient = recipients?.find(
-                  (r) => r.id === entry.recipientId
-                );
                 return (
                   <div
                     key={entry.id}
                     className="pb-3 border-b last:border-0 last:pb-0"
                   >
                     <div className="flex items-start justify-between mb-2">
-                      <p className="text-sm">{recipient?.name}</p>
+                      <p className="text-sm">{entry.recipientName}</p>
                       <div className="flex items-center gap-2">
                         <MoodIcon mood={entry.mood} size={16} />
                         <span className="text-xs text-gray-500">

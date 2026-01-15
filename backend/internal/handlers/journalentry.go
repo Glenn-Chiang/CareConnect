@@ -18,7 +18,7 @@ type JournalHandler struct {
 type createJournalEntryRequest struct {
 	RecipientID uint            `json:"recipientId" binding:"required"`
 	Content     string          `json:"content" binding:"required"`
-	Mood        models.MoodType `json:"mood" binding:"required,oneof=happy sad neutral angry anxious"`
+	Mood        models.MoodType `json:"mood" binding:"required,oneof=happy sad neutral excited angry anxious"`
 }
 
 func (h JournalHandler) Create(c *gin.Context) {

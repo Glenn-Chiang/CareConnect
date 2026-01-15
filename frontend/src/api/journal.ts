@@ -24,7 +24,7 @@ export const useAddJournalEntry = () => {
 
   return useMutation({
     mutationFn: (data: {
-      recipientId: number;
+      recipientId: string;
       content: string;
       mood: MoodType;
     }) =>
@@ -58,9 +58,9 @@ export const useAddComment = () => {
 
   return useMutation({
     mutationFn: (data: {
-      journalEntryId: number;
+      journalEntryId: string;
       content: string;
-      authorId: number;
+      authorId: string;
     }) =>
       apiFetch<Comment>(`/comments`, {
         method: "POST",

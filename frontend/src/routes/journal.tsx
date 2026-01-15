@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useUser } from "../api/users";
 import { useAcceptedJournalEntries } from "@/api/journal";
 import { useAddComment } from "@/api/journal";
 import { useComments } from "@/api/journal";
@@ -16,6 +15,7 @@ import { MoodIcon } from "../components/MoodIcon";
 import { format } from "date-fns";
 import { MessageCircle, Mic, ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
+import { useGetUser } from "@/api/users";
 
 export function Journal() {
   const { currentUser } = useAuth();
@@ -49,9 +49,9 @@ export function Journal() {
 
     addComment.mutate(
       {
-        journalEntryId: Number(journalEntryId),
+        journalEntryId: journalEntryId,
         content: comment,
-        authorId: Number(currentUser?.id || ""),
+        authorId: currentUser?.id || "",
       },
       {
         onSuccess: () => {
@@ -127,7 +127,7 @@ function JournalEntryCard({
   onAddComment,
 }: JournalEntryCardProps) {
   const { data: comments } = useComments(entry.id);
-  const { data: recipient } = useUser(recipientId);
+  const { data: recipient } = useGetUser(recipientId);
 
   return (
     <Card>

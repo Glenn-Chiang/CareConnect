@@ -123,6 +123,7 @@ export function RecipientDashboard() {
   });
 
   const handleSubmitJournal = () => {
+    console.log(currentUser?.recipientId);
     if (!journalContent.trim()) {
       toast.error("Please write something in your journal");
       return;
@@ -135,7 +136,7 @@ export function RecipientDashboard() {
 
     addJournalEntry.mutate(
       {
-        recipientId: Number(currentUser?.recipientId || ""),
+        recipientId: currentUser?.recipientId || "",
         content: journalContent,
         mood: selectedMood,
       },
@@ -196,9 +197,9 @@ export function RecipientDashboard() {
 
     addCommentMutation.mutate(
       {
-        journalEntryId: Number(journalEntryId),
+        journalEntryId: journalEntryId,
         content: comment,
-        authorId: Number(currentUser?.id || ""),
+        authorId: currentUser?.id || "",
       },
       {
         onSuccess: () => {

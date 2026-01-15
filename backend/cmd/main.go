@@ -21,6 +21,7 @@ func main() {
 		&models.User{},
 		&models.Caregiver{},
 		&models.Recipient{},
+		&models.CaregiverRecipient{},
 		&models.JournalEntry{},
 		&models.Comment{},
 		&models.Todo{},
@@ -46,6 +47,7 @@ func main() {
 
 	recipientHandler := handlers.RecipientHandler{DB: DB}
 	r.GET("/recipients", recipientHandler.List)
+	r.GET("/caregivers/:id/recipients", recipientHandler.ListRecipientsByCaregiver)
 	r.GET("/recipients/:id", recipientHandler.GetByID)
 
 	caregiverHandler := handlers.CaregiverHandler{DB: DB}
