@@ -7,13 +7,16 @@ export default function Recorder() {
     const [seconds, setSeconds] = useState(0);
     const [permission, setPermission] = useState(false);
     const [stream, setStream] = useState<MediaStream | null>(null);
-    const [audioChunks, setAudioChunks] = useState<BlobPart[]>([]);
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
     const timerRef = useRef<NodeJS.Timeout | null>(null);
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
-    const mimeType = "audio/mp4"
+    const mimeType = MediaRecorder.isTypeSupported("audio/webm")
+        ? "audio/webm"
+        : MediaRecorder.isTypeSupported("audio/mp4")
+            ? "audio/mp4"
+            : "audio/wav";
 
     useEffect(() => {
         const requestPermission = async () => {
@@ -47,25 +50,19 @@ export default function Recorder() {
         mediaRecorderRef.current.ondataavailable = (event) => {
             if (typeof event.data === "undefined") return;
             if (event.data.size === 0) return;
-            setAudioChunks([event.data]);
+            setAudioUrl(URL.createObjectURL(event.data));
         }
         mediaRecorderRef.current.start();
     }
     const stopRecording = async() => {
+        if (mediaRecorderRef.current && isRecording) {
+            mediaRecorderRef.current.stop();
+        }
         setIsRecording(false);
         if (timerRef.current) {
             clearInterval(timerRef.current);
             timerRef.current = null;
         }
-        if (mediaRecorderRef.current) {
-            mediaRecorderRef.current.onstop = () => {
-                const audioBlob = new Blob(audioChunks, {type: mimeType});
-                setAudioUrl(URL.createObjectURL(audioBlob));
-                setAudioChunks([]);
-            }
-            mediaRecorderRef.current.stop();
-        }
-
     }
     const formatTime = (totalSeconds: number) => {
         const hours = Math.floor(totalSeconds / 3600);
