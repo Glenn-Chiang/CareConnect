@@ -129,9 +129,9 @@ func (h RecipientHandler) ListByCaregiver(c *gin.Context) {
 }
 
 func (h RecipientHandler) GetByID(c *gin.Context) {
-	id := c.Param("recipientId")
+	id := c.Param("id")
 	var recipient models.Recipient
-	if err := h.DB.Where("id = ?", id).First(&recipient).Error; err != nil {
+	if err := h.DB.Preload("User").Where("id = ?", id).First(&recipient).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Recipient not found"})
 		return
 	}
