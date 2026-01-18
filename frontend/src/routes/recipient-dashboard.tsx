@@ -122,7 +122,7 @@ export function RecipientDashboard() {
   );
   const [commentText, setCommentText] = useState<Record<string, string>>({});
   const [profileData, setProfileData] = useState({
-    name: recipient?.user.name || "",
+    name: recipient?.name || "",
     condition: recipient?.condition || "",
     likes: recipient?.likes || "",
     dislikes: recipient?.dislikes || "",
@@ -180,7 +180,7 @@ export function RecipientDashboard() {
           toast.success("Profile updated successfully!");
           setIsProfileDialogOpen(false);
           // Update the auth context would happen here in real app
-          window.location.reload(); // Simple refresh for mock data
+          // window.location.reload(); // Simple refresh for mock data
         },
       }
     );
@@ -227,7 +227,7 @@ export function RecipientDashboard() {
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
                 <span className="text-lg text-purple-700">
-                  {recipient?.user.name
+                  {recipient?.name
                     .split(" ")
                     .map((n) => n[0])
                     .join("")}
@@ -235,7 +235,7 @@ export function RecipientDashboard() {
               </div>
               <div>
                 <h1 className="text-xl">
-                  Hello, {recipient?.user.name.split(" ")[0]}
+                  Hello, {recipient?.name.split(" ")[0]}
                 </h1>
                 <p className="text-sm text-gray-500">
                   How are you feeling today?
@@ -252,7 +252,7 @@ export function RecipientDashboard() {
                     variant="outline"
                     onClick={() =>
                       setProfileData({
-                        name: recipient?.user.name || "",
+                        name: recipient?.name || "",
                         condition: recipient?.condition || "",
                         likes: recipient?.likes || "",
                         dislikes: recipient?.dislikes || "",

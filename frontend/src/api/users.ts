@@ -88,7 +88,7 @@ export const useGetAllRecipients = (caregiverId?: string) =>
           body: JSON.stringify(data),
         }),
       onSuccess: (recipient) => {
-        queryClient.invalidateQueries({ queryKey: ['recipient', recipient.id] });
+        queryClient.invalidateQueries({ queryKey: ['recipients', recipient.id] });
         updateUser({ name: recipient.name });
       },
     });
