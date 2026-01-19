@@ -34,8 +34,6 @@ export function Dashboard() {
   const upcomingTodos = todos?.filter((t) => !t.completed).slice(0, 5) || []
   const recentJournals = journalEntries?.slice(0, 5) || []
 
-  console.log(recipients)
-
   return (
     <div className="space-y-6">
       <div>
