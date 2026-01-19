@@ -54,7 +54,6 @@ import {
   useComments,
 } from "@/api/journal";
 import Recorder from "@/components/Recorder";
-import {apiFetch} from "@/api";
 
 const moodOptions: {
   type: MoodType;
@@ -95,6 +94,8 @@ const moodOptions: {
       "bg-orange-100 hover:bg-orange-200 text-orange-700 border-orange-300",
   },
 ];
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export function RecipientDashboard() {
   const { currentUser, logout } = useAuth();
@@ -243,7 +244,6 @@ export function RecipientDashboard() {
       console.log(key, value);
     }
 
-    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
     const res = await fetch(`${BACKEND_URL}/journal-entries/upload`, {  // Add your base URL
       method: "POST",
@@ -558,7 +558,6 @@ export function RecipientDashboard() {
             <div>
               <Recorder onAudioReady={(objBlob) => {
                 setAudioBlob(objBlob);
-                console.log(audioBlob);
               }}/>
             </div>
 
@@ -593,7 +592,9 @@ export function RecipientDashboard() {
                   your first entry above!
                 </p>
               )}
-              {journalEntries?.slice(0, 10).map((entry) => (
+              {journalEntries?.slice(0, 10).map((entry) => {
+                  console.log(entry);
+                  return (
                 <JournalEntryWithComments
                   key={entry.id}
                   entry={entry}
@@ -606,7 +607,7 @@ export function RecipientDashboard() {
                   onAddComment={() => handleAddComment(entry.id)}
                   currentUserId={currentUser?.id || ""}
                 />
-              ))}
+              )})}
             </div>
           </CardContent>
         </Card>
@@ -645,10 +646,11 @@ function JournalEntryWithComments({
         <MoodIcon mood={entry.mood} showLabel />
       </div>
       <p className="text-gray-700 mb-3">{entry.content}</p>
-      {entry.hasVoiceMessage && (
+      {entry.audioUrl && (
         <div className="mb-3 flex items-center gap-2 text-sm text-purple-600">
           <Mic className="w-4 h-4" />
           <span>Voice message attached</span>
+          <audio className="mt-4" src={BACKEND_URL + entry.audioUrl} controls/>
         </div>
       )}
 

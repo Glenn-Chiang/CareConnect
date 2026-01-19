@@ -197,6 +197,7 @@ func (h JournalHandler) UploadAudio(c *gin.Context) {
 	}
 
 	// Save to ./uploads/
+	/*
 	randomName, err := GenerateUniqueFilename("./uploads", ".mp4")
 
 	if err != nil {
@@ -204,15 +205,15 @@ func (h JournalHandler) UploadAudio(c *gin.Context) {
 		return
 	}
 
-	uploadPath := "uploads/" + randomName
+	uploadPath := "uploads/" + randomName */
 
-	if err = c.SaveUploadedFile(file, uploadPath); err != nil {
+	if err = c.SaveUploadedFile(file, file.filename); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error uploading": err.Error()})
 		return
 	}
 
 	// The URL that frontend can load
-	fileURL := "/uploads/" + randomName
+	fileURL := "/uploads/" + file.filename
 
 	c.JSON(http.StatusOK, gin.H{
 		"url": fileURL,
