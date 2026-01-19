@@ -1,19 +1,22 @@
-import { Link } from "@tanstack/react-router";
-import { useAcceptedJournalEntries } from "@/api/journal";
-import { useGetRecipientsByCaregiver } from "../api/users";
-import { useTodos } from "@/api/todos";
-import { useAuth } from "@/auth/AuthProvider";
-import { CheckSquare, BookOpen, Users, AlertCircle } from "lucide-react";
+import { Link } from '@tanstack/react-router'
+import { useAcceptedJournalEntries } from '@/api/journal'
+import {
+  useGetCaregiverByUserId,
+  useGetRecipientsByCaregiver,
+} from '../api/users'
+import { useTodos } from '@/api/todos'
+import { useAuth } from '@/auth/AuthProvider'
+import { CheckSquare, BookOpen, Users, AlertCircle } from 'lucide-react'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
-import { Badge } from "../components/ui/badge";
-import { format } from "date-fns";
-import { MoodIcon } from "../components/MoodIcon";
+} from '../components/ui/card'
+import { Badge } from '../components/ui/badge'
+import { format } from 'date-fns'
+import { MoodIcon } from '../components/MoodIcon'
 
 export function Dashboard() {
    const { currentUser } = useAuth()
@@ -31,9 +34,11 @@ export function Dashboard() {
      useAcceptedJournalEntries(caregiverId)
 
   const urgentTodos =
-    todos?.filter((t) => !t.completed && t.priority === "high") || [];
-  const upcomingTodos = todos?.filter((t) => !t.completed).slice(0, 5) || [];
-  const recentJournals = journalEntries?.slice(0, 5) || [];
+    todos?.filter((t) => !t.completed && t.priority === 'high') || []
+  const upcomingTodos = todos?.filter((t) => !t.completed).slice(0, 5) || []
+  const recentJournals = journalEntries?.slice(0, 5) || []
+
+  console.log(recipients)
 
   return (
     <div className="space-y-6">
@@ -51,7 +56,7 @@ export function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="font-semibold">
-              {recipientsLoading ? "..." : recipients?.length || 0}
+              {recipientsLoading ? '...' : recipients?.length || 0}
             </div>
             <p className="text-xs text-gray-500">Active care relationships</p>
           </CardContent>
@@ -65,7 +70,7 @@ export function Dashboard() {
           <CardContent>
             <div className="font-semibold">
               {todosLoading
-                ? "..."
+                ? '...'
                 : todos?.filter((t) => !t.completed).length || 0}
             </div>
             <p className="text-xs text-gray-500">
@@ -74,7 +79,7 @@ export function Dashboard() {
                   {urgentTodos.length} urgent
                 </span>
               )}
-              {urgentTodos.length === 0 && "No urgent tasks"}
+              {urgentTodos.length === 0 && 'No urgent tasks'}
             </p>
           </CardContent>
         </Card>
@@ -86,7 +91,7 @@ export function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="font-semibold">
-              {journalLoading ? "..." : journalEntries?.length || 0}
+              {journalLoading ? '...' : journalEntries?.length || 0}
             </div>
             <p className="text-xs text-gray-500">Total entries</p>
           </CardContent>
@@ -116,7 +121,7 @@ export function Dashboard() {
                     <div className="flex-1">
                       <p className="text-sm">{todo.title}</p>
                       <p className="text-xs text-gray-500 mt-1">
-                        {format(todo.dueDate, "MMM d, yyyy h:mm a")}
+                        {format(todo.dueDate, 'MMM d, yyyy h:mm a')}
                       </p>
                     </div>
                     <Badge variant="destructive">High Priority</Badge>
@@ -149,12 +154,12 @@ export function Dashboard() {
                   <div className="flex-1">
                     <p className="text-sm">{todo.title}</p>
                     <p className="text-xs text-gray-500 mt-1">
-                      {format(todo.dueDate, "MMM d, yyyy h:mm a")}
+                      {format(todo.dueDate, 'MMM d, yyyy h:mm a')}
                     </p>
                   </div>
                   <Badge
                     variant={
-                      todo.priority === "high" ? "destructive" : "secondary"
+                      todo.priority === 'high' ? 'destructive' : 'secondary'
                     }
                   >
                     {todo.priority}
@@ -191,11 +196,11 @@ export function Dashboard() {
                     className="pb-3 border-b last:border-0 last:pb-0"
                   >
                     <div className="flex items-start justify-between mb-2">
-                      <p className="text-sm">{entry.recipientName}</p>
+                      <p className="text-sm">{entry.recipient.user.name}</p>
                       <div className="flex items-center gap-2">
                         <MoodIcon mood={entry.mood} size={16} />
                         <span className="text-xs text-gray-500">
-                          {format(entry.createdAt, "MMM d, h:mm a")}
+                          {format(entry.createdAt, 'MMM d, h:mm a')}
                         </span>
                       </div>
                     </div>
@@ -203,7 +208,7 @@ export function Dashboard() {
                       {entry.content}
                     </p>
                   </div>
-                );
+                )
               })}
             </div>
             <Link
@@ -224,34 +229,35 @@ export function Dashboard() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {recipients?.map((recipient) => (
-              <Link
-                key={recipient.id}
-                to="/recipients/$recipientId"
-                params={{ recipientId: String(recipient.id) }}
-                className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                    <span className="font-semibold text-blue-700">
-                      {recipient.user.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </span>
+            {recipients &&
+              recipients.map((recipient) => (
+                <Link
+                  key={recipient.id}
+                  to="/recipients/$recipientId"
+                  params={{ recipientId: String(recipient.id) }}
+                  className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                      <span className="font-semibold text-blue-700">
+                        {recipient.user.name
+                          .split(' ')
+                          .map((n) => n[0])
+                          .join('')}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-sm">{recipient.user.name}</p>
+                      <p className="text-xs text-gray-500">
+                        {recipient.age} years old
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm">{recipient.user.name}</p>
-                    <p className="text-xs text-gray-500">
-                      {recipient.age} years old
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))}
           </div>
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
