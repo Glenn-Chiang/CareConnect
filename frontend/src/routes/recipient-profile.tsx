@@ -1,6 +1,6 @@
 import { useJournalEntries } from '@/api/journal'
 import { Link, useParams } from '@tanstack/react-router'
-import { useGetRecipientById } from '../api/users'
+import { useGetCaregiverByUserId, useGetRecipientById } from '../api/users'
 
 import { useTodos } from '@/api/todos'
 import { useAuth } from '@/auth/AuthProvider'
@@ -20,15 +20,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 
 export function RecipientProfile() {
   const { currentUser } = useAuth()
+  const { data: caregiver } = useGetCaregiverByUserId(currentUser?.id || '')
   const { recipientId } = useParams({ from: '/recipients/$recipientId' })
   const { data: recipient, isLoading: userLoading } =
     useGetRecipientById(recipientId)
-  const { data: allTodos } = useTodos(String(currentUser?.id || ''))
+  const { data: todos } = useTodos(caregiver?.id || '', recipientId)
   const rid = Number(recipientId)
 
   const { data: journalEntries } = useJournalEntries(recipientId)
 
-  const recipientTodos = allTodos?.filter((t) => t.recipientId === rid) || []
+  const recipientTodos = todos?.filter((t) => t.recipientId === rid) || []
   const activeTodos = recipientTodos.filter((t) => !t.completed)
   const completedTodos = recipientTodos.filter((t) => t.completed)
 
@@ -58,14 +59,14 @@ export function RecipientProfile() {
           <div className="flex items-center gap-4">
             <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center">
               <span className="text-2xl text-blue-700">
-                {recipient.user.name
+                {recipient.name
                   .split(' ')
                   .map((n) => n[0])
                   .join('')}
               </span>
             </div>
             <div className="flex-1">
-              <CardTitle className="text-2xl">{recipient.user.name}</CardTitle>
+              <CardTitle className="text-2xl">{recipient.name}</CardTitle>
               <p className="text-gray-500">{recipient.age} years old</p>
             </div>
           </div>
@@ -117,37 +118,6 @@ export function RecipientProfile() {
           </div>
         </CardContent>
       </Card>
-
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-          <CardHeader>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <CheckSquare className="w-5 h-5 text-blue-600" />
-              </div>
-              <div>
-                <CardTitle className="text-base">Tasks</CardTitle>
-                <CardDescription>View and manage tasks</CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-          <CardHeader>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                <BookOpen className="w-5 h-5 text-purple-600" />
-              </div>
-              <div>
-                <CardTitle className="text-base">Journal</CardTitle>
-                <CardDescription>Read journal entries</CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-        </Card>
-      </div>
 
       {/* Detailed Information */}
       <Tabs defaultValue="tasks">

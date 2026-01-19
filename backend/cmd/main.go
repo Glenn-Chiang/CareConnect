@@ -6,6 +6,7 @@ import (
 	"hack4good/internal/models"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -35,8 +36,13 @@ func main() {
 	r := gin.New()
 	r.Use(gin.Logger(), gin.Recovery())
 
+	origins := strings.Split(os.Getenv("CORS_ORIGINS"), ",")
+	for i := range origins {
+		origins[i] = strings.TrimSpace(origins[i])
+	}
+
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowOrigins:     origins,
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
@@ -53,6 +59,7 @@ func main() {
 	r.GET("/caregivers/:id/recipients", recipientHandler.ListByCaregiver)
 	r.GET("/recipients/:id", recipientHandler.GetByID)
 	r.PUT("/recipients/:id", recipientHandler.Update)
+	r.GET("/recipients/user/:userId", recipientHandler.GetByUserID)
 
 	caregiverHandler := handlers.CaregiverHandler{DB: DB}
 	r.GET("/caregivers", caregiverHandler.List)
@@ -87,7 +94,11 @@ func main() {
 	r.PUT("/todos/:id", todoHandler.Update)
 	r.DELETE("/todos/:id", todoHandler.Delete)
 
-	if err := r.Run(":8080"); err != nil {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	if err := r.Run("0.0.0.0:" + port); err != nil {
 		log.Fatalf("server failed: %v", err)
 	}
 }

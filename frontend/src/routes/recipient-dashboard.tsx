@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useState } from 'react'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Textarea } from "../components/ui/textarea";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { Badge } from "../components/ui/badge";
+} from '../components/ui/card'
+import { Button } from '../components/ui/button'
+import { Textarea } from '../components/ui/textarea'
+import { Input } from '../components/ui/input'
+import { Label } from '../components/ui/label'
+import { Badge } from '../components/ui/badge'
 import {
   Dialog,
   DialogContent,
@@ -18,16 +18,17 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogDescription,
-} from "../components/ui/dialog";
-import { useAuth } from "@/auth/AuthProvider";
+} from '../components/ui/dialog'
+import { useAuth } from '@/auth/AuthProvider'
 import {
   useGetPendingRequestsForRecipient,
   useGetRecipientById,
   useUpdateRecipient,
   useGetCaregiversForRecipient,
-} from "../api/users";
-import { MoodIcon } from "../components/MoodIcon";
-import type { MoodType } from "../types/types";
+  useGetRecipientByUserId,
+} from '../api/users'
+import { MoodIcon } from '../components/MoodIcon'
+import type { MoodType } from '../types/types'
 import {
   Smile,
   Frown,
@@ -43,78 +44,84 @@ import {
   ChevronDown,
   ChevronUp,
   Users,
-} from "lucide-react";
-import { format } from "date-fns";
-import { toast } from "sonner";
-import { RequestCard } from "@/components/RequestCard";
+} from 'lucide-react'
+import { format } from 'date-fns'
+import { toast } from 'sonner'
+import { RequestCard } from '@/components/RequestCard'
 import {
   useJournalEntries,
   useAddJournalEntry,
   useAddComment,
   useComments,
-} from "@/api/journal";
-import Recorder from "@/components/Recorder";
+} from '@/api/journal'
+import Recorder from '@/components/Recorder.tsx'
 
 const moodOptions: {
-  type: MoodType;
-  icon: any;
-  label: string;
-  color: string;
+  type: MoodType
+  icon: any
+  label: string
+  color: string
 }[] = [
   {
-    type: "happy",
+    type: 'happy',
     icon: Smile,
-    label: "Happy",
-    color: "bg-green-100 hover:bg-green-200 text-green-700 border-green-300",
+    label: 'Happy',
+    color: 'bg-green-100 hover:bg-green-200 text-green-700 border-green-300',
   },
   {
-    type: "excited",
+    type: 'excited',
     icon: Laugh,
-    label: "Excited",
+    label: 'Excited',
     color:
-      "bg-purple-100 hover:bg-purple-200 text-purple-700 border-purple-300",
+      'bg-purple-100 hover:bg-purple-200 text-purple-700 border-purple-300',
   },
   {
-    type: "neutral",
+    type: 'neutral',
     icon: Meh,
-    label: "Neutral",
-    color: "bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300",
+    label: 'Neutral',
+    color: 'bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300',
   },
   {
-    type: "sad",
+    type: 'sad',
     icon: Frown,
-    label: "Sad",
-    color: "bg-blue-100 hover:bg-blue-200 text-blue-700 border-blue-300",
+    label: 'Sad',
+    color: 'bg-blue-100 hover:bg-blue-200 text-blue-700 border-blue-300',
   },
   {
-    type: "anxious",
+    type: 'anxious',
     icon: Anxious,
-    label: "Anxious",
+    label: 'Anxious',
     color:
-      "bg-orange-100 hover:bg-orange-200 text-orange-700 border-orange-300",
+      'bg-orange-100 hover:bg-orange-200 text-orange-700 border-orange-300',
   },
-];
+]
+
+
+
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export function RecipientDashboard() {
-  const { currentUser, logout } = useAuth();
-  const { data: recipient } = useGetRecipientById(
-    currentUser?.recipientId || ""
-  );
+  const { currentUser, logout } = useAuth()
+  const [logoutOpen, setLogoutOpen] = useState(false)
+  const { data: recipient } = useGetRecipientByUserId(currentUser?.id || '')
 
-  const { data: journalEntries } = useJournalEntries(recipient?.id || "");
+  const { data: journalEntries } = useJournalEntries(recipient?.id || '')
   const { data: pendingRequests } = useGetPendingRequestsForRecipient(
-    recipient?.id || ""
-  );
-  const { data: caregivers } = useGetCaregiversForRecipient(
-    recipient?.id || ""
-  );
+    recipient?.id || '',
+  )
+  const { data: caregivers } = useGetCaregiversForRecipient(recipient?.id || '')
 
-  const addJournalEntry = useAddJournalEntry();
-  const updateRecipient = useUpdateRecipient();
-  const addCommentMutation = useAddComment();
+  const addJournalEntry = useAddJournalEntry()
+  const updateRecipient = useUpdateRecipient()
+  const addCommentMutation = useAddComment()
 
+  const [journalContent, setJournalContent] = useState('')
+  const [selectedMood, setSelectedMood] = useState<MoodType | null>(null)
+  const [showVoiceRecording, setShowVoiceRecording] = useState(false)
+  const [isProfileDialogOpen, setIsProfileDialogOpen] = useState(false)
+  const [expandedEntries, setExpandedEntries] = useState<Set<string>>(new Set())
+  const [commentText, setCommentText] = useState<Record<string, string>>({})
   const [journalContent, setJournalContent] = useState("");
   const [selectedMood, setSelectedMood] = useState<MoodType | null>(null);
   const [showVoiceRecording, setShowVoiceRecording] = useState(false);
@@ -125,24 +132,23 @@ export function RecipientDashboard() {
   );
   const [commentText, setCommentText] = useState<Record<string, string>>({});
   const [profileData, setProfileData] = useState({
-    name: recipient?.name || "",
-    condition: recipient?.condition || "",
-    likes: recipient?.likes || "",
-    dislikes: recipient?.dislikes || "",
-    phobias: recipient?.phobias || "",
-    petPeeves: recipient?.petPeeves || "",
-  });
+    name: recipient?.name || '',
+    condition: recipient?.condition || '',
+    likes: recipient?.likes || '',
+    dislikes: recipient?.dislikes || '',
+    phobias: recipient?.phobias || '',
+    petPeeves: recipient?.petPeeves || '',
+  })
 
-  const handleSubmitJournal = async () => {
-
-    if (!journalContent.trim() && !audioBlob) {
-      toast.error("Please write something in your journal");
-      return;
+  const handleSubmitJournal = () => {
+    if (!journalContent.trim()) {
+      toast.error('Please write something in your journal')
+      return
     }
 
     if (!selectedMood) {
-      toast.error("Please select how you're feeling");
-      return;
+      toast.error("Please select how you're feeling")
+      return
     }
 
     let newUrl: string | null = null;
@@ -158,32 +164,32 @@ export function RecipientDashboard() {
 
     addJournalEntry.mutate(
       {
-        recipientId: currentUser?.recipientId || "",
+        recipientId: currentUser?.recipientId || '',
         content: journalContent,
         mood: selectedMood,
         audioUrl: newUrl,
       },
       {
         onSuccess: () => {
-          toast.success("Journal entry saved!");
-          setJournalContent("");
-          setSelectedMood(null);
-          setShowVoiceRecording(false);
+          toast.success('Journal entry saved!')
+          setJournalContent('')
+          setSelectedMood(null)
+          setShowVoiceRecording(false)
         },
-      }
-    );
-  };
+      },
+    )
+  }
 
   const handleUpdateProfile = () => {
-    console.log(recipient);
+    console.log(recipient)
     if (!profileData.name.trim()) {
-      toast.error("Name cannot be empty");
-      return;
+      toast.error('Name cannot be empty')
+      return
     }
 
     updateRecipient.mutate(
       {
-        id: recipient?.id || "",
+        id: recipient?.id || '',
         name: profileData.name,
         condition: profileData.condition,
         likes: profileData.likes,
@@ -193,42 +199,42 @@ export function RecipientDashboard() {
       },
       {
         onSuccess: () => {
-          toast.success("Profile updated successfully!");
-          setIsProfileDialogOpen(false);
+          toast.success('Profile updated successfully!')
+          setIsProfileDialogOpen(false)
           // Update the auth context would happen here in real app
           // window.location.reload(); // Simple refresh for mock data
         },
-      }
-    );
-  };
+      },
+    )
+  }
 
   const toggleExpand = (entryId: string) => {
-    const newExpanded = new Set(expandedEntries);
+    const newExpanded = new Set(expandedEntries)
     if (newExpanded.has(entryId)) {
-      newExpanded.delete(entryId);
+      newExpanded.delete(entryId)
     } else {
-      newExpanded.add(entryId);
+      newExpanded.add(entryId)
     }
-    setExpandedEntries(newExpanded);
-  };
+    setExpandedEntries(newExpanded)
+  }
 
   const handleAddComment = (journalEntryId: string) => {
-    const comment = commentText[journalEntryId]?.trim();
+    const comment = commentText[journalEntryId]?.trim()
     if (!comment) {
-      toast.error("Please enter a comment");
-      return;
+      toast.error('Please enter a comment')
+      return
     }
 
     addCommentMutation.mutate(
       {
         journalEntryId: journalEntryId,
         content: comment,
-        authorId: currentUser?.id || "",
+        authorId: currentUser?.id || '',
       },
       {
         onSuccess: () => {
-          toast.success("Comment added");
-          setCommentText({ ...commentText, [journalEntryId]: "" });
+          toast.success('Comment added')
+          setCommentText({ ...commentText, [journalEntryId]: '' })
         },
       }
     );
@@ -271,15 +277,15 @@ export function RecipientDashboard() {
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
                 <span className="text-lg text-purple-700">
-                  {recipient?.name
-                    .split(" ")
+                  {recipient?.user.name
+                    .split(' ')
                     .map((n) => n[0])
-                    .join("")}
+                    .join('')}
                 </span>
               </div>
               <div>
                 <h1 className="text-xl">
-                  Hello, {recipient?.name.split(" ")[0]}
+                  Hello, {recipient?.user.name.split(' ')[0]}
                 </h1>
                 <p className="text-sm text-gray-500">
                   How are you feeling today?
@@ -296,12 +302,12 @@ export function RecipientDashboard() {
                     variant="outline"
                     onClick={() =>
                       setProfileData({
-                        name: recipient?.name || "",
-                        condition: recipient?.condition || "",
-                        likes: recipient?.likes || "",
-                        dislikes: recipient?.dislikes || "",
-                        phobias: recipient?.phobias || "",
-                        petPeeves: recipient?.petPeeves || "",
+                        name: recipient?.name || '',
+                        condition: recipient?.condition || '',
+                        likes: recipient?.likes || '',
+                        dislikes: recipient?.dislikes || '',
+                        phobias: recipient?.phobias || '',
+                        petPeeves: recipient?.petPeeves || '',
                       })
                     }
                   >
@@ -433,7 +439,7 @@ export function RecipientDashboard() {
                   </div>
                 </DialogContent>
               </Dialog>
-              <Button variant="ghost" onClick={logout}>
+              <Button variant="ghost" onClick={() => setLogoutOpen(true)}>
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </Button>
@@ -453,12 +459,12 @@ export function RecipientDashboard() {
               </CardTitle>
               <CardDescription>
                 You have {pendingRequests.length} pending care request
-                {pendingRequests.length > 1 ? "s" : ""}
+                {pendingRequests.length > 1 ? 's' : ''}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {pendingRequests.map((request) => {
-                return <RequestCard request={request} />;
+                return <RequestCard request={request} />
               })}
             </CardContent>
           </Card>
@@ -484,9 +490,9 @@ export function RecipientDashboard() {
                     <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
                       <span className="text-sm text-purple-700">
                         {caregiver.user.name
-                          .split(" ")
+                          .split(' ')
                           .map((n) => n[0])
-                          .join("")}
+                          .join('')}
                       </span>
                     </div>
                     <div>
@@ -519,26 +525,26 @@ export function RecipientDashboard() {
               <label className="text-lg mb-3 block">How are you feeling?</label>
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                 {moodOptions.map((mood) => {
-                  const Icon = mood.icon;
-                  const isSelected = selectedMood === mood.type;
+                  const Icon = mood.icon
+                  const isSelected = selectedMood === mood.type
                   return (
                     <button
                       key={mood.type}
                       onClick={() => setSelectedMood(mood.type)}
                       className={`p-4 rounded-xl border-2 transition-all ${
                         isSelected
-                          ? mood.color + " border-2 scale-105 shadow-md"
-                          : "bg-white border-gray-200 hover:border-gray-300"
+                          ? mood.color + ' border-2 scale-105 shadow-md'
+                          : 'bg-white border-gray-200 hover:border-gray-300'
                       }`}
                     >
                       <Icon
                         className={`w-8 h-8 mx-auto mb-2 ${
-                          isSelected ? "" : "text-gray-400"
+                          isSelected ? '' : 'text-gray-400'
                         }`}
                       />
                       <p className="text-sm text-center">{mood.label}</p>
                     </button>
-                  );
+                  )
                 })}
               </div>
             </div>
@@ -600,30 +606,56 @@ export function RecipientDashboard() {
                   entry={entry}
                   isExpanded={expandedEntries.has(entry.id)}
                   onToggleExpand={() => toggleExpand(entry.id)}
-                  commentText={commentText[entry.id] || ""}
+                  commentText={commentText[entry.id] || ''}
                   onCommentChange={(text) =>
                     setCommentText({ ...commentText, [entry.id]: text })
                   }
                   onAddComment={() => handleAddComment(entry.id)}
-                  currentUserId={currentUser?.id || ""}
+                  currentUserId={currentUser?.id || ''}
                 />
               )})}
             </div>
           </CardContent>
         </Card>
       </main>
+      <Dialog open={logoutOpen} onOpenChange={setLogoutOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Log out?</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to log out of your account?
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex justify-end gap-2 mt-4">
+            <Button variant="outline" onClick={() => setLogoutOpen(false)}>
+              Cancel
+            </Button>
+
+            <Button
+              variant="destructive"
+              onClick={() => {
+                setLogoutOpen(false)
+                logout()
+              }}
+            >
+              Log out
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
-  );
+  )
 }
 
 interface JournalEntryWithCommentsProps {
-  entry: any;
-  isExpanded: boolean;
-  onToggleExpand: () => void;
-  commentText: string;
-  onCommentChange: (text: string) => void;
-  onAddComment: () => void;
-  currentUserId: string;
+  entry: any
+  isExpanded: boolean
+  onToggleExpand: () => void
+  commentText: string
+  onCommentChange: (text: string) => void
+  onAddComment: () => void
+  currentUserId: string
 }
 
 function JournalEntryWithComments({
@@ -634,14 +666,14 @@ function JournalEntryWithComments({
   onCommentChange,
   onAddComment,
 }: JournalEntryWithCommentsProps) {
-  const { data: comments } = useComments(entry.id);
+  const { data: comments } = useComments(entry.id)
 
   return (
     <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
       <div className="flex items-center justify-between mb-3">
         <span className="text-sm text-gray-500">
-          {format(entry.createdAt, "EEEE, MMMM d, yyyy")} at{" "}
-          {format(entry.createdAt, "h:mm a")}
+          {format(entry.createdAt, 'EEEE, MMMM d, yyyy')} at{' '}
+          {format(entry.createdAt, 'h:mm a')}
         </span>
         <MoodIcon mood={entry.mood} showLabel />
       </div>
@@ -664,7 +696,7 @@ function JournalEntryWithComments({
         >
           <span className="flex items-center gap-2">
             <MessageCircle className="w-4 h-4" />
-            {comments?.length || 0} Comment{comments?.length !== 1 ? "s" : ""}
+            {comments?.length || 0} Comment{comments?.length !== 1 ? 's' : ''}
           </span>
           {isExpanded ? (
             <ChevronUp className="w-4 h-4" />
@@ -689,17 +721,17 @@ function JournalEntryWithComments({
                           {comment.authorName}
                         </span>
                         <Badge variant="outline" className="text-xs">
-                          {comment.authorRole === "caregiver"
-                            ? "Caregiver"
-                            : "You"}
+                          {comment.authorRole === 'caregiver'
+                            ? 'Caregiver'
+                            : 'You'}
                         </Badge>
                         <span className="text-xs text-gray-500 ml-auto">
-                          {format(comment.createdAt, "MMM d, h:mm a")}
+                          {format(comment.createdAt, 'MMM d, h:mm a')}
                         </span>
                       </div>
                       <p className="text-sm text-gray-700">{comment.content}</p>
                     </div>
-                  );
+                  )
                 })}
               </div>
             )}
@@ -725,5 +757,5 @@ function JournalEntryWithComments({
         )}
       </div>
     </div>
-  );
+  )
 }
