@@ -17,7 +17,7 @@ In backend directory:
 2. Create `.env` file with:
 
 ```
-DATABASE_URL=postgresql://devuser:devpassword@host.docker.internal:5432/hack4good
+DATABASE_URL=postgresql://devuser:devpassword@localhost:5432/hack4good
 PORT=8080
 CORS_ORIGINS=http://localhost:3000
 ```
@@ -47,7 +47,7 @@ From the frontend/ directory:
 If your frontend reads the backend URL from env (e.g. Vite / React):
 
 ```
-VITE_API_BASE_URL=http://localhost:8080
+VITE_BACKEND_URL=http://localhost:8080
 ```
 
 3. Run the dev server
