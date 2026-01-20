@@ -75,8 +75,6 @@ func main() {
 	journalHandler := handlers.JournalHandler{DB: DB}
 	r.POST("/journal-entries", journalHandler.Create)
 	r.GET("/journal-entries", journalHandler.List)
-	r.POST("/journal-entries/upload", journalHandler.UploadAudio)
-	r.Static("/uploads", "./uploads")
 	r.GET("/journal-entries/accepted", journalHandler.ListAccepted)
 	r.PUT("/journal-entries/:id", journalHandler.Update)
 	r.DELETE("/journal-entries/:id", journalHandler.Delete)
@@ -100,11 +98,5 @@ func main() {
 	}
 	if err := r.Run("0.0.0.0:" + port); err != nil {
 		log.Fatalf("server failed: %v", err)
-	}
-}
-
-func createUploadFolder() {
-	if err := os.MkdirAll("uploads", 0755); err != nil {
-		panic("Unable to create uploads folder: " + err.Error())
 	}
 }

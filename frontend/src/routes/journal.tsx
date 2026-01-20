@@ -161,9 +161,7 @@ function JournalEntryCard({
             <span className="text-sm text-blue-700">
               Voice message attached
             </span>
-            <Button variant="link" size="sm" className="text-blue-600 ml-auto">
-              Play
-            </Button>
+            <audio className="mt-4" src={entry.audioUrl} controls/>
           </div>
         )}
 
