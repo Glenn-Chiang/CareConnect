@@ -36,6 +36,7 @@
             "@tanstack/react-query": "*",
             "@tanstack/react-router": "*",
             "@types/react-dom": "^19.2.3",
+            "@vercel/blob": "^2.0.0",
             "class-variance-authority": "^0.7.1",
             "clsx": "*",
             "cmdk": "^1.1.1",
