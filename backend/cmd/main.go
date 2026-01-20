@@ -17,7 +17,6 @@ import (
 func main() {
 	_ = godotenv.Load()
 
-	createUploadFolder()
 	DB := db.Connect()
 
 	if err := DB.AutoMigrate(
