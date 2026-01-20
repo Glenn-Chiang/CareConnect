@@ -144,11 +144,13 @@ export function RecipientDashboard() {
     try {
       if (audioBlob) {
         newUrl = await uploadAudio(audioBlob);
+        console.log(newUrl);
       }
     } catch (e) {
       console.error("failed to upload", e)
     }
 
+    console.log(newUrl);
     addJournalEntry.mutate(
       {
         recipientId: currentUser?.recipientId || '',
@@ -228,21 +230,24 @@ export function RecipientDashboard() {
 
   async function uploadAudio(blob: Blob): Promise<string | null> {
     const filename = `recording-${Date.now()}.mp4`;
-    let returnurl: string | null = null
 
-    // Upload directly to Vercel Blob
-    const formData = new FormData();
-    formData.append("file", blob, filename);
-    formData.append('upload_preset', 'hack4good');
-    fetch(url, {
-      method: 'POST',
-      body: formData
-    }).then( (response) => {
-      return response.json();
-    }).then((data) => {
-      returnurl = data.url;
-    })
-    return returnurl;
+    try {
+      const formData = new FormData();
+      formData.append("file", blob, filename);
+      formData.append('upload_preset', 'hack4good');
+
+      const response = await fetch(url, {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await response.json();
+      console.log(data.url);
+      return data.url;
+    } catch (error) {
+      console.error("Upload failed:", error);
+      return null;
+    }
   }
 
 
