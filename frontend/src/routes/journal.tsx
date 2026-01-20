@@ -155,7 +155,7 @@ function JournalEntryCard({
       <CardContent className="space-y-4">
         <p className="text-sm">{entry.content}</p>
 
-        {entry.hasVoiceMessage && (
+        {entry.audioUrl && (
           <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
             <Mic className="w-4 h-4 text-blue-600" />
             <span className="text-sm text-blue-700">

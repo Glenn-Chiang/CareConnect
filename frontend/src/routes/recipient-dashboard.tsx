@@ -22,7 +22,6 @@ import {
 import { useAuth } from '@/auth/AuthProvider'
 import {
   useGetPendingRequestsForRecipient,
-  useGetRecipientById,
   useUpdateRecipient,
   useGetCaregiversForRecipient,
   useGetRecipientByUserId,
@@ -96,10 +95,6 @@ const moodOptions: {
   },
 ]
 
-
-
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const url = 'https://api.cloudinary.com/v1_1/dadjstkpa/video/upload';
 
 export function RecipientDashboard() {
