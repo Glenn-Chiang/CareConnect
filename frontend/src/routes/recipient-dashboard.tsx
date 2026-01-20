@@ -668,7 +668,7 @@ function JournalEntryWithComments({
         <div className="mb-3 flex items-center gap-2 text-sm text-purple-600">
           <Mic className="w-4 h-4" />
           <span>Voice message attached</span>
-          <audio className="mt-4" src={BACKEND_URL + entry.audioUrl} controls/>
+          <audio className="mt-4" src={entry.audioUrl} controls/>
         </div>
       )}
 
